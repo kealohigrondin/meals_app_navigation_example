@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:meals_app_navigation_example/data/dummy_data.dart';
+import 'package:meals_app_navigation_example/screens/categories_screen.dart';
+import 'package:meals_app_navigation_example/screens/meals_screen.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -20,6 +23,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: theme, home: const Text("hello world"));
+    return MaterialApp(theme: theme, home: const CategoryScreen());
   }
 }
