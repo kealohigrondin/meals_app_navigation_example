@@ -4,9 +4,10 @@ import 'package:meals_app_navigation_example/widgets/meal_list_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealListItem extends StatelessWidget {
-  const MealListItem({required this.meal, super.key});
+  const MealListItem({required this.meal, required this.onMealSelect, super.key});
 
   final Meal meal;
+  final void Function(Meal meal) onMealSelect;
 
   String capitalizeText(String input) {
     return input[0].toUpperCase() + input.substring(1);
@@ -20,7 +21,9 @@ class MealListItem extends StatelessWidget {
       clipBehavior: Clip.hardEdge, //clips all content that overflows the shape
       elevation: 8,
       child: InkWell(
-          onTap: () {},
+          onTap: () {
+            onMealSelect(meal);
+          },
           child: Stack(
             children: [
               FadeInImage(
