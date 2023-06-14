@@ -4,14 +4,22 @@ import 'package:meals_app_navigation_example/screens/meal_details_screen.dart';
 import 'package:meals_app_navigation_example/widgets/meal_list_item.dart';
 
 class MealsScreen extends StatelessWidget {
-  const MealsScreen({this.title, required this.meals, super.key});
+  const MealsScreen(
+      {this.title,
+      required this.meals,
+      required this.onToggleFavorite,
+      super.key});
 
   final String? title;
   final List<Meal> meals;
+  final void Function(Meal meal) onToggleFavorite;
 
   void selectMeal(BuildContext context, Meal meal) {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (ctx) => MealDetailsScreen(meal: meal)));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (ctx) => MealDetailsScreen(
+              meal: meal,
+              onToggleFavorite: onToggleFavorite,
+            )));
   }
 
   @override
@@ -28,16 +36,16 @@ class MealsScreen extends StatelessWidget {
         : Center(
             child: Column(mainAxisSize: MainAxisSize.min, children: [
               Text('No meals found',
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
                       color: Theme.of(context).colorScheme.onBackground)),
               const SizedBox(height: 10),
               Text('Select a different category',
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
                       color: Theme.of(context).colorScheme.onBackground))
             ]),
           );
 
-    if(title == null) {
+    if (title == null) {
       return content;
     }
 
