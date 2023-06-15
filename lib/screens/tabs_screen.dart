@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:meals_app_navigation_example/models/meal.dart';
 import 'package:meals_app_navigation_example/providers/favorites_provider.dart';
 import 'package:meals_app_navigation_example/providers/meals_provider.dart';
+import 'package:meals_app_navigation_example/providers/settings_provider.dart';
 import 'package:meals_app_navigation_example/screens/categories_screen.dart';
 import 'package:meals_app_navigation_example/screens/meals_screen.dart';
 import 'package:meals_app_navigation_example/screens/settings_screen.dart';
@@ -17,12 +17,6 @@ class TabsScreen extends ConsumerStatefulWidget {
 
 class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _activeTabIndex = 0;
-  Map<Filter, bool> _selectedFilters = {
-    Filter.glutenFree: false,
-    Filter.lactoseFree: false,
-    Filter.vegan: false,
-    Filter.vegetarian: false
-  };
 
   void _selectScreen(int index) {
     setState(() {
@@ -34,12 +28,8 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     Navigator.of(context).pop();
     if (identifier == 'settings') {
       //open settings
-      //res resolves to a map with keys of type filter and values of type bool
-      final res = await Navigator.of(context).push<Map<Filter, bool>>(
-          MaterialPageRoute(builder: (ctx) => SettingsScreen(currentFilters: _selectedFilters)));
-      setState(() {
-        _selectedFilters = res ?? _selectedFilters;
-      });
+      await Navigator.of(context)
+          .push(MaterialPageRoute(builder: (ctx) => const SettingsScreen()));
     }
   }
 
@@ -48,20 +38,21 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     //tells widget to watch for changes on mealsProvider and use in meals variable
     final meals = ref.watch(mealsProvider);
     final favoriteMeals = ref.watch(favoritesProvider);
+    final settings = ref.watch(settingsProvider);
 
     String activeScreenTitle = 'Categories';
 
     final availableMeals = meals.where((meal) {
-      if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
+      if (settings[Filter.glutenFree]! && !meal.isGlutenFree) {
         return false;
       }
-      if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
+      if (settings[Filter.lactoseFree]! && !meal.isLactoseFree) {
         return false;
       }
-      if (_selectedFilters[Filter.vegan]! && !meal.isVegan) {
+      if (settings[Filter.vegan]! && !meal.isVegan) {
         return false;
       }
-      if (_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
+      if (settings[Filter.vegetarian]! && !meal.isVegetarian) {
         return false;
       }
       return true;
@@ -70,8 +61,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     Widget activeScreen = CategoryScreen(
       availableMeals: availableMeals,
     );
-
-
 
     if (_activeTabIndex == 1) {
       activeScreen = MealsScreen(

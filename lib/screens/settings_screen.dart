@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meals_app_navigation_example/providers/settings_provider.dart';
 
-enum Filter { glutenFree, lactoseFree, vegetarian, vegan }
-
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({required this.currentFilters, super.key});
-
-  final Map<Filter, bool> currentFilters;
+class SettingsScreen extends ConsumerStatefulWidget {
+  const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   var _glutenFreeOnly = false;
   var _lactoseFreeOnly = false;
   var _vegetarianOnly = false;
@@ -20,10 +18,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    _glutenFreeOnly = widget.currentFilters[Filter.glutenFree]!;
-    _lactoseFreeOnly = widget.currentFilters[Filter.lactoseFree]!;
-    _veganOnly = widget.currentFilters[Filter.vegan]!;
-    _vegetarianOnly = widget.currentFilters[Filter.vegetarian]!;
+    final activeFilters = ref.read(settingsProvider);
+
+    _glutenFreeOnly = activeFilters[Filter.glutenFree]!;
+    _lactoseFreeOnly = activeFilters[Filter.lactoseFree]!;
+    _veganOnly = activeFilters[Filter.vegan]!;
+    _vegetarianOnly = activeFilters[Filter.vegetarian]!;
   }
 
   @override
@@ -40,13 +40,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // }),//can navigate this way as well
         body: WillPopScope(
           onWillPop: () async {
-            Navigator.of(context).pop({
+            ref.read(settingsProvider.notifier).setAllSettings({
               Filter.glutenFree: _glutenFreeOnly,
               Filter.lactoseFree: _lactoseFreeOnly,
               Filter.vegan: _veganOnly,
               Filter.vegetarian: _vegetarianOnly,
             });
-            return false; //return false to avoid popping a second time
+            return true; // pops the screen
           },
           child: Column(
             children: [
