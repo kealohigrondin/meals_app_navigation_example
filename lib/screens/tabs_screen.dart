@@ -60,6 +60,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
           _selectScreen(index);
         },
         currentIndex: _activeTabIndex,
+        fixedColor: Theme.of(context).colorScheme.primary,
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.set_meal), label: 'Categories'),
