@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app_navigation_example/providers/favorites_provider.dart';
-import 'package:meals_app_navigation_example/providers/meals_provider.dart';
 import 'package:meals_app_navigation_example/providers/settings_provider.dart';
 import 'package:meals_app_navigation_example/screens/categories_screen.dart';
 import 'package:meals_app_navigation_example/screens/meals_screen.dart';
@@ -35,34 +34,17 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //tells widget to watch for changes on mealsProvider and use in meals variable
-    final meals = ref.watch(mealsProvider);
-    final favoriteMeals = ref.watch(favoritesProvider);
-    final settings = ref.watch(settingsProvider);
+    //tells widget to watch for changes on filteredMealsProvider and use in meals variable
+    final availableMeals = ref.watch(filteredMealsProvider);
 
     String activeScreenTitle = 'Categories';
-
-    final availableMeals = meals.where((meal) {
-      if (settings[Filter.glutenFree]! && !meal.isGlutenFree) {
-        return false;
-      }
-      if (settings[Filter.lactoseFree]! && !meal.isLactoseFree) {
-        return false;
-      }
-      if (settings[Filter.vegan]! && !meal.isVegan) {
-        return false;
-      }
-      if (settings[Filter.vegetarian]! && !meal.isVegetarian) {
-        return false;
-      }
-      return true;
-    }).toList();
 
     Widget activeScreen = CategoryScreen(
       availableMeals: availableMeals,
     );
 
     if (_activeTabIndex == 1) {
+      final favoriteMeals = ref.watch(favoritesProvider);
       activeScreen = MealsScreen(
         meals: favoriteMeals,
       );
