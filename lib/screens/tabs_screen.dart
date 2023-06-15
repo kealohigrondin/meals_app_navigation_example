@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app_navigation_example/data/dummy_data.dart';
 import 'package:meals_app_navigation_example/models/meal.dart';
 import 'package:meals_app_navigation_example/screens/categories_screen.dart';
@@ -6,14 +7,14 @@ import 'package:meals_app_navigation_example/screens/meals_screen.dart';
 import 'package:meals_app_navigation_example/screens/settings_screen.dart';
 import 'package:meals_app_navigation_example/widgets/main_drawer.dart';
 
-class TabsScreen extends StatefulWidget {
+class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
 
   @override
-  State<TabsScreen> createState() => _TabsScreenState();
+  ConsumerState<TabsScreen> createState() => _TabsScreenState();
 }
 
-class _TabsScreenState extends State<TabsScreen> {
+class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _activeTabIndex = 0;
   List<Meal> favoriteMeals = [];
   Map<Filter, bool> _selectedFilters = {
